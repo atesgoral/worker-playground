@@ -1,0 +1,37 @@
+<style>
+#expression {
+  font: 12px monospace;
+}
+</style>
+<textarea id="expression" cols="80" rows="20">
+Object
+  .getPrototypeOf(self)
+  .toString()
+</textarea>
+<hr>
+<button type="button" id="run">Run</button>
+<hr>
+<pre id="result"></pre>
+<script>
+const $ = (selectors) => document.querySelector(selectors);
+
+function runExpression(expression) {
+  try {
+    self.postMessage(eval(expression));
+  } catch (error) {
+    self.postMessage(error.message);
+  }
+}
+
+$('#run').addEventListener('click', () => {
+  const expression = $('#expression').value;
+  const code = `(${runExpression.toString()})(${JSON.stringify(expression)})`;
+  const blob = new Blob([code], { type: 'text/javascript' });
+  const url = URL.createObjectURL(blob);
+  const worker = new Worker(url);
+
+  worker.onmessage = (event) => {
+    $('#result').innerHTML = event.data;
+  };
+});
+</script>
