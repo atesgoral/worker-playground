@@ -4,9 +4,19 @@
 }
 </style>
 <textarea id="expression" cols="80" rows="20">
-Object
-  .getPrototypeOf(self)
-  .toString()
+const hierarchy = [];
+
+let proto = Object.getPrototypeOf(self);
+
+while (proto) {
+  hierarchy.push({
+    obj: proto.toString(),
+    props: Object.getOwnPropertyNames(proto)
+  });
+  proto = Object.getPrototypeOf(proto);
+}
+
+JSON.stringify(hierarchy, null, 2)
 </textarea>
 <hr>
 <button type="button" id="run">Run</button>
