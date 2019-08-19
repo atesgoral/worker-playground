@@ -26,6 +26,11 @@ JSON.stringify(hierarchy, null, 2)
 <script>
 const $ = (selectors) => document.querySelector(selectors);
 
+if (document.location.hash) {
+  const expression = decodeURIComponent(document.location.hash.split('#')[1]);
+  $('#expression').value = expression;
+}
+
 function runExpression(expression) {
   try {
     self.postMessage(eval(expression));
@@ -36,6 +41,9 @@ function runExpression(expression) {
 
 $('#run').addEventListener('click', () => {
   const expression = $('#expression').value;
+
+  document.location.hash = encodeURIComponent(expression);
+
   const code = `(${runExpression.toString()})(${JSON.stringify(expression)})`;
   const blob = new Blob([code], { type: 'text/javascript' });
   const url = URL.createObjectURL(blob);
